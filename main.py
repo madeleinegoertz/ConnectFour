@@ -34,6 +34,7 @@ def make_move(board, player, col):
     if board[r][col] == ".":
       board[r][col] = player
       placed = True
+      #print("Placed in r = {} c = {}".format(r, col))
     #print(placed)
     r = r - 1
 
@@ -48,8 +49,7 @@ def is_valid_col(col):
 
 # returns True if player won, False if not
 def has_won(board, player):
-  return (row_won(board, player) or col_won(board, player)
-    or left_diag_won(board, player) or right_diag_won(board, player))
+  return row_won(board, player) or col_won(board, player)or left_diag_won(board, player) or right_diag_won(board, player)
 
 # Looks for this shape
 # ****
@@ -102,7 +102,40 @@ def col_won(board, player):
 #   *
 #    *
 def left_diag_won(board, player):
-  return False
+  diag_won = False
+  # loop through rows (0 to 5) and columns (0 to 6)
+  r = 0
+  i = 0
+  while r < N_ROWS and not diag_won:
+    c = 0
+    num_consecutive = 0
+    while c < N_COLS and r < N_ROWS and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r += 1
+      c += 1
+    i += 1
+    r = i
+  # loop through columns (0 to 6) and rows (0 to 5)
+  c = 0
+  i = 0
+  while c < N_COLS and not diag_won:
+    r = 0
+    num_consecutive = 0
+    while r < N_ROWS and c < N_COLS and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r += 1
+      c += 1
+    i += 1
+    c = i
+  return diag_won
 
 # Looks for this shape
 #    *
@@ -110,7 +143,43 @@ def left_diag_won(board, player):
 #  *
 # *
 def right_diag_won(board, player):
-  return False
+  diag_won = False
+  # First loop through rows (5 to 0) then columns (0 to 6)
+  r = N_ROWS - 1
+  i = 0
+  while r >= 0 and not diag_won:
+    c = 0
+    num_consecutive = 0
+    while c < N_COLS and r >= 0 and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r -= 1
+      c += 1
+    i += 1
+    r = N_ROWS - 1 - i
+  # Then loop through columns (1 to 6) then rows (5 to 0)
+  c = 1
+  i = 0
+  while c < N_COLS and not diag_won:
+    r = N_ROWS - 1
+    num_consecutive = 0
+    while r >= 0 and c < N_COLS and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        #print("detected {} at ({}, {}), n = {}".format(player, r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r -= 1
+      c += 1
+    i += 1
+    c = i
+  #print(diag_won)
+  return diag_won
+        
 
 def main():
   player = "x"
