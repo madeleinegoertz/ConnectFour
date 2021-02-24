@@ -54,7 +54,23 @@ def has_won(board, player):
 # Looks for this shape
 # ****
 def row_won(board, player):
-  return False
+  row_won = False
+  # loop through rows
+  r = 0
+  while r < N_ROWS and not row_won:
+    # loop through cols in row_won
+    # track count of consecutive symbol
+    c = 0
+    num_consecutive = 0
+    while c < N_COLS and not row_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+      else:
+        num_consecutive = 0
+      row_won = num_consecutive >= 4
+      c += 1
+    r += 1
+  return row_won
 
 # Looks for this shape
 # *
