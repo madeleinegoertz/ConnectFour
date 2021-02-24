@@ -46,25 +46,59 @@ def make_move(board, player, col):
 def is_valid_col(col):
   return col > 0 and col <= N_COLS
 
-def has_won(board): # returns string of winning player or empty string, or "Tie"
-  return ""
+# returns True if player won, False if not
+def has_won(board, player):
+  return (row_won(board, player) or col_won(board, player)
+    or left_diag_won(board, player) or right_diag_won(board, player))
+
+# Looks for this shape
+# ****
+def row_won(board, player):
+  return False
+
+# Looks for this shape
+# *
+# *
+# *
+# *
+def col_won(board, player):
+  return False
+
+# Looks for this shape
+# *
+#  *
+#   *
+#    *
+def left_diag_won(board, player):
+  return False
+
+# Looks for this shape
+#    *
+#   *
+#  *
+# *
+def right_diag_won(board, player):
+  return False
 
 def main():
   player = "x"
   board = initialize()
-  winner = has_won(board)
+  game_won = False
+  max_turns = N_ROWS * N_COLS
+  turn = 1
 
-  while winner == "":
+  while not game_won and turn <= max_turns:
     print_board(board)
     col = get_move(board, player)
     board = make_move(board, player, col)
-    winner = has_won(board)
+    game_won = has_won(board, player)
     player = "o" if player == "x" else "x" # switch player
+    turn += 1
   
   print_board(board)
-  if winner == "Tie":
+  if not game_won: # game ended but nobody won
     print("Tie game.")
   else:
-    print("Player {} wins!".format(winner))
+    print("Player {} wins!".format("o" if player == "x" else "x"))
 
 main()
