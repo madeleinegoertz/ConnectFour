@@ -1,76 +1,70 @@
 N_ROWS = 6
 N_COLS = 7
 
+def initialize():
+  board = [["."] * N_COLS for i in range(N_ROWS)]
+  return board
 
-# sets up empty board
-def init():
-  return [["o" for i in range(N_COLS)] for j in range(N_ROWS)]
-
-
-# print out a correctly formatted board
+# TODO: allow for more than 9 columns
 def print_board(board):
-  print("1 2 3 4 5 6 7")
-  print(" " * (2 * N_COLS - 1))
+  text = ""
+  for i in range(N_COLS):
+    text += str(i+1) + " "
+  print(text)
+  print("-" * (2 * N_COLS - 1))
   for row in board:
     print("|".join(row))
 
-# Ask player to input col and validate
+# input player move from console
 def get_move(board, player):
   col = int(input("Player {} enter a column:".format(player)))
-  # check if col is valid
-  if (col < 1 or col > N_COLS):
-    print("Invalid input. Enter a number in range.")
+  # check if the column is valid
+  if not is_valid_col(col):
+    print("Invalid input! Please enter a column between 1 and {}".format(N_COLS))
     col = get_move(board, player)
   
-  #convert from indexing by 0 to indexing by 1
-  col -= 1
-
-  #  check if column is full
-  col_full = True
-  for i in range(N_ROWS):
-    if board[i][col] == "O":
-      col_full = False
-      break
-  if col_full:
-    print("That column is full.  Please try again.")
-    col = get_move(board, player)
+  # zero index column 
+  col = col - 1
   return col
 
-
-
-# places the piece in the correct col
 def make_move(board, player, col):
-  row = 0
-  for i in range(HEIGHT):
-    if board[i][col] == "O":            row = i        else:            break    board[row][col] = player    return board
+  placed = False
+  r = len(board) - 1
+  while not placed and r >= 0:
+    if board[r][col] == ".":
+      board[r][col] = player
+      placed = True
+    #print(placed)
+    r = r - 1
 
+  if not placed:
+    print("Invalid input! This columns is full.")
+    col = get_move(board, player)
+  return board
 
-# return player that's won or an empty string
-def check_win(board):
-  pass
+# returns True if col is valid column
+def is_valid_col(col):
+  return col > 0 and col <= N_COLS
 
+def has_won(board): # returns string of winning player or empty string, or "Tie"
+  return ""
 
 def main():
-    board = init()
-    player = "x"
-    winner = ""
+  player = "x"
+  board = initialize()
+  winner = has_won(board)
 
-    while winner == "":
-        print_board(board)
-        col = get_move(board, player)
-        make_move(board, player, col)
-        winner = check_win(board)
-        if player == "x":
-            player = "o"
-        else:
-            player = "x"
-
+  while winner == "":
     print_board(board)
-    if winner == "Tie":
-        print("Tie game.")
-    else:
-        print("Player {} wins!".format(winner))
+    col = get_move(board, player)
+    board = make_move(board, player, col)
+    winner = has_won(board)
+    player = "o" if player == "x" else "x" # switch player
+  
+  print_board(board)
+  if winner == "Tie":
+    print("Tie game.")
+  else:
+    print("Player {} wins!".format(winner))
 
-
-if __name__ == "__main__":
-  main()
+main()
