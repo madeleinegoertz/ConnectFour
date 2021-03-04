@@ -55,17 +55,15 @@ def has_won(board, player):
 # Looks like this
 # xxxx
 def row_won(board, player):
-  # Loop through rows (0 to 5)
   has_won = False
   r = 0
   while r < N_ROWS and not has_won:
-    # Loop through cols (0 to 6)
     c = 0
     num_consecutive = 0
     while c < N_COLS and not has_won:
       if board[r][c] == player:
         num_consecutive += 1
-        print("detected {} at r = {}, c = {}, n_c = {}".format(player, r, c, num_consecutive))
+        print("r = {}, c= {}, n = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
       has_won = num_consecutive >= 4
