@@ -49,7 +49,7 @@ def is_valid_col(col):
 
 # returns True if player won, False if not
 def has_won(board, player):
-  return row_won(board, player) or col_won(board, player)or left_diag_won(board, player) or right_diag_won(board, player)
+  return right_diag_won(board, player) #row_won(board, player) or col_won(board, player)or left_diag_won(board, player) or 
 
 # Looks for this shape
 # ****
@@ -112,6 +112,7 @@ def left_diag_won(board, player):
     while c < N_COLS and r < N_ROWS and not diag_won:
       if board[r][c] == player:
         num_consecutive += 1
+        print("a - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
       diag_won = num_consecutive >= 4
@@ -119,20 +120,22 @@ def left_diag_won(board, player):
       c += 1
     i += 1
     r = i
-  # loop through columns (0 to 6) and rows (0 to 5)
-  c = 0
-  i = 0
+  # loop through columns (1 to 6) and rows (0 to 5)
+  c = 1
+  i = c
   while c < N_COLS and not diag_won:
     r = 0
     num_consecutive = 0
     while r < N_ROWS and c < N_COLS and not diag_won:
       if board[r][c] == player:
         num_consecutive += 1
+        print("b - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
       diag_won = num_consecutive >= 4
       r += 1
       c += 1
+    #print(i)
     i += 1
     c = i
   return diag_won
@@ -153,6 +156,7 @@ def right_diag_won(board, player):
     while c < N_COLS and r >= 0 and not diag_won:
       if board[r][c] == player:
         num_consecutive += 1
+        print("a - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
       diag_won = num_consecutive >= 4
@@ -162,14 +166,14 @@ def right_diag_won(board, player):
     r = N_ROWS - 1 - i
   # Then loop through columns (1 to 6) then rows (5 to 0)
   c = 1
-  i = 0
+  i = c
   while c < N_COLS and not diag_won:
     r = N_ROWS - 1
     num_consecutive = 0
     while r >= 0 and c < N_COLS and not diag_won:
       if board[r][c] == player:
         num_consecutive += 1
-        #print("detected {} at ({}, {}), n = {}".format(player, r, c, num_consecutive))
+        print("b - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
       diag_won = num_consecutive >= 4
