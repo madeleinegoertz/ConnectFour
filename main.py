@@ -49,7 +49,7 @@ def is_valid_col(col):
 
 # returns true if the player passed in has won, false if not. 
 def has_won(board, player):
-  return row_won(board, player) or col_won(board, player) or left_diag_won(board, player)   or right_diag_won(board, player)
+  return left_diag_won(board, player) #row_won(board, player) or col_won(board, player) or    or right_diag_won(board, player)
 
 # return True if that player has 4 in a row across. 
 # Looks like this
@@ -83,7 +83,46 @@ def col_won(board, player):
 #   x
 #    x
 def left_diag_won(board, player):
-  return False
+  has_won = False
+  # Loop through the rows (0 to 5) and cols (0 to 6)
+  r = 0
+  i = 0 # controls where the diagonal starts
+  # Move to next starting row
+  while r < N_ROWS and not has_won:
+    c = 0
+    num_consecutive = 0
+    # Moves down the line diagonally
+    while r < N_ROWS and c < N_COLS and not has_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        print("A: r = {}, c= {}, n = {}".format(r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      has_won = num_consecutive >= 4
+      r += 1
+      c += 1
+    i += 1
+    r = i
+  # Loop through the cols (1 to 6) and rows (0 to 5)
+  c = 1
+  i = c # controls where the diagonal starts
+  # Move to the next starting column
+  while c < N_COLS and not has_won:
+    r = 0
+    num_consecutive = 0
+    # Moves down the line diagonally
+    while r < N_ROWS and c < N_COLS and not has_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        print("B: r = {}, c= {}, n = {}".format(r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      has_won = num_consecutive >= 4
+      r += 1
+      c += 1
+    i += 1
+    c = i
+  return has_won
 
 #    x
 #   x
