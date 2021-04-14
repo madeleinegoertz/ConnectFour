@@ -34,6 +34,7 @@ def make_move(board, player, col):
     if board[r][col] == ".":
       board[r][col] = player
       placed = True
+      #print("Placed in r = {} c = {}".format(r, col))
     #print(placed)
     r = r - 1
 
@@ -42,113 +43,165 @@ def make_move(board, player, col):
     col = get_move(board, player)
   return board
 
- 
 # returns True if col is valid column
 def is_valid_col(col):
   return col > 0 and col <= N_COLS
 
-# returns true if the player passed in has won, false if not. 
+# returns True if player won, False if not
 def has_won(board, player):
-  return left_diag_won(board, player) #row_won(board, player) or col_won(board, player) or    or right_diag_won(board, player)
+  return row_won(board, player) or col_won(board, player)or left_diag_won(board, player) or right_diag_won(board, player) 
 
-# return True if that player has 4 in a row across. 
-# Looks like this
-# xxxx
+# Looks for this shape
+# ****
 def row_won(board, player):
-  has_won = False
+  row_won = False
+  # loop through rows
   r = 0
-  while r < N_ROWS and not has_won:
+  while r < N_ROWS and not row_won:
+    # loop through cols in row
+    # track count of consecutive symbol
     c = 0
     num_consecutive = 0
-    while c < N_COLS and not has_won:
+    while c < N_COLS and not row_won:
       if board[r][c] == player:
         num_consecutive += 1
-        print("r = {}, c= {}, n = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
-      has_won = num_consecutive >= 4
+      row_won = num_consecutive >= 4
       c += 1
     r += 1
-  return has_won
+  return row_won
 
-# x
-# x
-# x
-# x
+# Looks for this shape
+# *
+# *
+# *
+# *
 def col_won(board, player):
-  return False
-
-# x
-#  x
-#   x
-#    x
-def left_diag_won(board, player):
-  has_won = False
-  # Loop through the rows (0 to 5) and cols (0 to 6)
-  r = 0
-  i = 0 # controls where the diagonal starts
-  # Move to next starting row
-  while r < N_ROWS and not has_won:
-    c = 0
+  col_won = False
+  # loop through cols
+  c = 0
+  while c < N_COLS and not col_won:
+    # loop through rows in col
+    # track count of consecutive symbol
+    r = 0
     num_consecutive = 0
-    # Moves down the line diagonally
-    while r < N_ROWS and c < N_COLS and not has_won:
+    while r < N_ROWS and not col_won:
       if board[r][c] == player:
         num_consecutive += 1
-        print("A: r = {}, c= {}, n = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
-      has_won = num_consecutive >= 4
+      col_won = num_consecutive >= 4
+      r += 1
+    c += 1
+  return col_won
+
+# Looks for this shape
+# *
+#  *
+#   *
+#    *
+def left_diag_won(board, player):
+  diag_won = False
+  # loop through rows (0 to 5) and columns (0 to 6)
+  r = 0
+  i = 0
+  while r < N_ROWS and not diag_won:
+    c = 0
+    num_consecutive = 0
+    while c < N_COLS and r < N_ROWS and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        #print("a - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
       r += 1
       c += 1
     i += 1
     r = i
-  # Loop through the cols (1 to 6) and rows (0 to 5)
+  # loop through columns (1 to 6) and rows (0 to 5)
   c = 1
-  i = c # controls where the diagonal starts
-  # Move to the next starting column
-  while c < N_COLS and not has_won:
+  i = c
+  while c < N_COLS and not diag_won:
     r = 0
     num_consecutive = 0
-    # Moves down the line diagonally
-    while r < N_ROWS and c < N_COLS and not has_won:
+    while r < N_ROWS and c < N_COLS and not diag_won:
       if board[r][c] == player:
         num_consecutive += 1
-        print("B: r = {}, c= {}, n = {}".format(r, c, num_consecutive))
+        #print("b - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
       else:
         num_consecutive = 0
-      has_won = num_consecutive >= 4
+      diag_won = num_consecutive >= 4
       r += 1
+      c += 1
+    #print(i)
+    i += 1
+    c = i
+  return diag_won
+
+# Looks for this shape
+#    *
+#   *
+#  *
+# *
+def right_diag_won(board, player):
+  diag_won = False
+  # First loop through rows (5 to 0) then columns (0 to 6)
+  r = N_ROWS - 1
+  i = 0
+  while r >= 0 and not diag_won:
+    c = 0
+    num_consecutive = 0
+    while c < N_COLS and r >= 0 and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        #print("a - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r -= 1
+      c += 1
+    i += 1
+    r = N_ROWS - 1 - i
+  # Then loop through columns (1 to 6) then rows (5 to 0)
+  c = 1
+  i = c
+  while c < N_COLS and not diag_won:
+    r = N_ROWS - 1
+    num_consecutive = 0
+    while r >= 0 and c < N_COLS and not diag_won:
+      if board[r][c] == player:
+        num_consecutive += 1
+        #print("b - r = {}, c = {}, nc = {}".format(r, c, num_consecutive))
+      else:
+        num_consecutive = 0
+      diag_won = num_consecutive >= 4
+      r -= 1
       c += 1
     i += 1
     c = i
-  return has_won
-
-#    x
-#   x
-#  x
-# x
-def right_diag_won(board, player):
-  return False
-
+  #print(diag_won)
+  return diag_won
+        
 
 def main():
   player = "x"
   board = initialize()
-  has_won_game = False
+  game_won = False
+  max_turns = N_ROWS * N_COLS
   turn = 1
 
-  # main game loop elapses if someone wins or the board fills up
-  while not has_won_game and turn <= N_ROWS * N_COLS:
+  while not game_won and turn <= max_turns:
     print_board(board)
     col = get_move(board, player)
     board = make_move(board, player, col)
-    has_won_game = has_won(board, player)
+    game_won = has_won(board, player)
     player = "o" if player == "x" else "x" # switch player
     turn += 1
   
   print_board(board)
-  if not has_won_game: # if the game is over but no one won. 
+  if not game_won: # game ended but nobody won
     print("Tie game.")
   else:
     print("Player {} wins!".format("o" if player == "x" else "x"))
